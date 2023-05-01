@@ -108,27 +108,31 @@ class CupcakeViewsTestCase(TestCase):
 
     def test_delete_cupcake(self):
         with app.test_client() as client:
-            url = "/api/cupcakes/1"
-            resp = client.delete(url, json=CUPCAKE_DATA)
+            url = f"/api/cupcakes/{self.cupcake_id}"
+            resp = client.delete(url)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertEqual(resp.json, {"deleted": 1})
+            self.assertEqual(resp.json, {"deleted": self.cupcake_id})
 
     def test_update_cupcake(self):
         with app.test_client() as client:
-            url = "/api/cupcakes/1"
+            url = f"/api/cupcakes/{self.cupcake_id}"
             resp = client.patch(url, json={"flavor": "sooGood"})
 
             self.assertEqual(resp.status_code, 200)
             self.assertEqual(resp.json, {
                 "cupcake": {
-                    "id": cupcake_id,
+                    "id": self.cupcake_id,
                     "flavor": "sooGood",
-                    "size": "TestSize2",
-                    "rating": 10,
-                    "image_url": "http://test.com/cupcake2.jpg"
+                    "size": "TestSize",
+                    "rating": 5,
+                    "image_url": "http://test.com/cupcake.jpg"
                 }
             })
+
+    #TODO: keep tests in same order
+    #TODO: query.count = 0 for delete
+    #TODO: query.count = 1 for update
 
 
 

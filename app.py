@@ -4,7 +4,7 @@ import os
 from flask import Flask, render_template, flash, redirect, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
-from models import connect_db, db, Cupcake
+from models import connect_db, db, Cupcake, DEFAULT_IMAGE_URL
 
 app = Flask(__name__)
 
@@ -72,15 +72,10 @@ def update_cupcake(cupcake_id):
 
     cupcake = Cupcake.query.get_or_404(cupcake_id)
 
-    flavor = request.json.get("flavor", cupcake.flavor)
-    size = request.json.get("size", cupcake.size)
-    rating = request.json.get("rating", cupcake.rating)
-    image_url = request.json.get("image_url", cupcake.image_url)
-
-    cupcake.flavor = flavor
-    cupcake.size = size
-    cupcake.rating = rating
-    cupcake.image_url = image_url
+    cupcake.flavor = request.json.get("flavor", cupcake.flavor)
+    cupcake.size = request.json.get("size", cupcake.size)
+    cupcake.rating = request.json.get("rating", cupcake.rating)
+    cupcake.image_url = request.json.get("image_url", cupcake.image_url)
 
     db.session.commit()
     serialized = cupcake.serialize()
@@ -99,3 +94,5 @@ def delete_cupcake(cupcake_id):
     db.session.commit()
 
     return (jsonify(deleted=cupcake_id), 200)
+
+#TODO: don't need status code 200
