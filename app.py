@@ -1,7 +1,7 @@
 """Flask app for Cupcakes"""
 import os
 
-from flask import Flask, render_template, flash, redirect
+from flask import Flask, render_template, flash, redirect, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
 from models import connect_db, db, Cupcake
@@ -24,7 +24,9 @@ toolbar = DebugToolbarExtension(app)
 
 @app.get("/api/cupcakes")
 def show_all_cupcakes():
-    """Get data about all cupcakes"""
+    """Get data about all cupcakes.
+    Respond with JSON like:
+    {cupcakes: [{id, flavor, size, rating, image_url}, ...]}"""
 
     cupcakes = Cupcake.query.all()
     serialized = [c.serialize() for c in cupcakes]
@@ -33,7 +35,9 @@ def show_all_cupcakes():
 
 @app.get("/api/cupcakes/<int:cupcake_id>")
 def show_single_cupcake(cupcake_id):
-    """Get data about a single cupcake"""
+    """Get data about a single cupcake via cupcake_id
+    Respond with JSON like:
+    {cupcakes: [{id, flavor, size, rating, image_url}, ...]}"""
 
     cupcake = Cupcake.query.get_or_404(cupcake_id)
     serialized = cupcake.serialize()
@@ -42,7 +46,9 @@ def show_single_cupcake(cupcake_id):
 
 @app.post("/api/cupcakes")
 def create_cupcake():
-    """Create a cupcake with flavor, size, rating and image data from the body of the request"""
+    """Create a cupcake with flavor, size, rating and image data from the body of the request.
+    Respond with JSON like:
+    {cupcake: {id, flavor, size, rating, image_url}}"""
 
     flavor = request.json["flavor"]
     size = request.json["size"]
@@ -57,3 +63,39 @@ def create_cupcake():
     serialized = new_cupcake.serialize()
 
     return (jsonify(cupcake=serialized), 201)
+
+@app.patch("/api/cupcakes/<int:cupcake_id>")
+def update_cupcake(cupcake_id):
+    """Update a cupcake using the id passed in the URL and the cupcake data passed in the body of the request.
+    Respond with JSON of the newly-updated cupcake, like this:
+    {cupcake: {id, flavor, size, rating, image_url}}"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    flavor = request.json.get("flavor", cupcake.flavor)
+    size = request.json.get("size", cupcake.size)
+    rating = request.json.get("rating", cupcake.rating)
+    image_url = request.json.get("image_url", cupcake.image_url)
+
+    cupcake.flavor = flavor
+    cupcake.size = size
+    cupcake.rating = rating
+    cupcake.image_url = image_url
+
+    db.session.commit()
+    serialized = cupcake.serialize()
+
+    return (jsonify(cupcake=serialized), 200)
+
+@app.delete("/api/cupcakes/<int:cupcake_id>")
+def delete_cupcake(cupcake_id):
+    """Delete cupcake with the id passed in the URL.
+    Respond with JSON like
+    {deleted: [cupcake-id]}"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    db.session.delete(cupcake)
+    db.session.commit()
+
+    return (jsonify(deleted=cupcake_id))
