@@ -16,7 +16,7 @@ def connect_db(app):
     db.init_app(app)
 
 class Cupcake(db.Model):
-    """"create instances of Pet"""
+    """"create instances of cupcake"""
 
     __tablename__ = "cupcakes"
 
@@ -41,7 +41,7 @@ class Cupcake(db.Model):
         nullable=False
 
     )
-
+    #TODO save deafault to variable
     image_url = db.Column(
         db.String(500),
         nullable=False,
