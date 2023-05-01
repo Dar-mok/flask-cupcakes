@@ -1,11 +1,7 @@
 """Flask app for Cupcakes"""
 import os
 
-<<<<<<< HEAD
 from flask import Flask, render_template, flash, redirect, request, jsonify
-=======
-from flask import Flask, render_template, flash, redirect, jsonify, request
->>>>>>> 26e8905a99c7c62e721f8689a73952fbe75ed42f
 from flask_debugtoolbar import DebugToolbarExtension
 
 from models import connect_db, db, Cupcake
@@ -28,14 +24,9 @@ toolbar = DebugToolbarExtension(app)
 
 @app.get("/api/cupcakes")
 def show_all_cupcakes():
-<<<<<<< HEAD
     """Get data about all cupcakes.
     Respond with JSON like:
     {cupcakes: [{id, flavor, size, rating, image_url}, ...]}"""
-=======
-    #TODO add to docstring, what func recieves,what func returns
-    """Get data about all cupcakes"""
->>>>>>> 26e8905a99c7c62e721f8689a73952fbe75ed42f
 
     cupcakes = Cupcake.query.all()
     serialized = [c.serialize() for c in cupcakes]
@@ -44,14 +35,9 @@ def show_all_cupcakes():
 
 @app.get("/api/cupcakes/<int:cupcake_id>")
 def show_single_cupcake(cupcake_id):
-<<<<<<< HEAD
     """Get data about a single cupcake via cupcake_id
     Respond with JSON like:
     {cupcakes: [{id, flavor, size, rating, image_url}, ...]}"""
-=======
-        #TODO add to docstring, what func recieves,what func returns
-    """Get data about a single cupcake"""
->>>>>>> 26e8905a99c7c62e721f8689a73952fbe75ed42f
 
     cupcake = Cupcake.query.get_or_404(cupcake_id)
     serialized = cupcake.serialize()
