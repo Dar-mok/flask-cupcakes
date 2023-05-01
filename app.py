@@ -1,7 +1,7 @@
 """Flask app for Cupcakes"""
 import os
 
-from flask import Flask, render_template, flash, redirect
+from flask import Flask, render_template, flash, redirect, jsonify, request
 from flask_debugtoolbar import DebugToolbarExtension
 
 from models import connect_db, db, Cupcake
@@ -24,6 +24,7 @@ toolbar = DebugToolbarExtension(app)
 
 @app.get("/api/cupcakes")
 def show_all_cupcakes():
+    #TODO add to docstring, what func recieves,what func returns
     """Get data about all cupcakes"""
 
     cupcakes = Cupcake.query.all()
@@ -33,6 +34,7 @@ def show_all_cupcakes():
 
 @app.get("/api/cupcakes/<int:cupcake_id>")
 def show_single_cupcake(cupcake_id):
+        #TODO add to docstring, what func recieves,what func returns
     """Get data about a single cupcake"""
 
     cupcake = Cupcake.query.get_or_404(cupcake_id)
@@ -47,7 +49,7 @@ def create_cupcake():
     flavor = request.json["flavor"]
     size = request.json["size"]
     rating = request.json["rating"]
-    image_url = request.json["image_url"]
+    image_url = request.json["image_url"] or None
 
     new_cupcake = Cupcake(flavor=flavor, size=size, rating=rating, image_url=image_url)
 
@@ -57,3 +59,7 @@ def create_cupcake():
     serialized = new_cupcake.serialize()
 
     return (jsonify(cupcake=serialized), 201)
+
+# @app.patch("/api/cupcakes/<int:cupcake_id>")
+# def update_cupcake(cupcake_id):
+#     """Update cupcake or return 404"""
