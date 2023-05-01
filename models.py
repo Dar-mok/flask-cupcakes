@@ -19,6 +19,17 @@ class Cupcake(db.Model):
 
     __tablename__ = "cupcakes"
 
+    def serialize(self):
+        """Serialize to dictionary."""
+
+        return {
+            "id": self.id,
+            "flavor": self.flavor,
+            "size": self.size,
+            "rating": self.rating,
+            "image_url": self.image_url
+        }
+
     id = db.Column(
         db.Integer,
         autoincrement=True,
@@ -42,7 +53,7 @@ class Cupcake(db.Model):
     )
 
     image_url = db.Column(
-        db.Text(500),
+        db.String(500),
         nullable=False,
         default="https://tinyurl.com/demo-cupcake"
     )
