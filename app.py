@@ -86,7 +86,7 @@ def update_cupcake(cupcake_id):
     db.session.commit()
     serialized = cupcake.serialize()
 
-    return (jsonify(cupcake=serialized), 200)
+    return jsonify(cupcake=serialized)
 
 @app.delete("/api/cupcakes/<int:cupcake_id>")
 def delete_cupcake(cupcake_id):
@@ -99,6 +99,5 @@ def delete_cupcake(cupcake_id):
     db.session.delete(cupcake)
     db.session.commit()
 
-    return (jsonify(deleted=cupcake_id), 200)
+    return jsonify(deleted=cupcake_id)
 
-#TODO: don't need status code 200
