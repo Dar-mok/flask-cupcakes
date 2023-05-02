@@ -22,6 +22,12 @@ connect_db(app)
 
 toolbar = DebugToolbarExtension(app)
 
+@app.get("/")
+def show_homepage():
+    """render homepage with cupcakes and cupcake form"""
+
+    return render_template("home.html")
+
 @app.get("/api/cupcakes")
 def show_all_cupcakes():
     """Get data about all cupcakes.
